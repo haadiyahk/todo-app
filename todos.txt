@@ -1,15 +1,13 @@
-wake up 
-brush
-breakfast
-walk 10k
-drink 6l water 
-go home
-clean room
-go to market
-make snack
-walk
 
-sleep
-sleep
-sleep
-sleep
+task1finish this section 
+check
+pancakes
+clean bedroom
+this is my new todo
+this is my new todo
+add new
+add new
+aDD
+aDD
+aDD
+hello
