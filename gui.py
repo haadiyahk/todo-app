@@ -23,6 +23,8 @@ while True:
             functions.write_todos(todos)
 
         case sg.WIN_CLOSED:
+            #sg is the imported module - FreeSimpleGUI
+            #WIN_CLOSED is a var defined in freesimplegui. this closes the program correctly when we click on the "x". exit button
             break
 
 window.close()
