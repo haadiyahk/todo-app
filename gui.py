@@ -1,6 +1,10 @@
 import functions
 import FreeSimpleGUI as sg
+import time
 
+sg.theme("Black")
+
+clock = sg.Text('', key="clock")
 label = sg.Text("Type in your to-do")
 input_box = sg.InputText(tooltip="Enter todo", key="todo")
 add_button = sg.Button("Add")
@@ -14,7 +18,8 @@ complete_button = sg.Button("Complete")
 exit_button = sg.Button("Exit")
 window = sg.Window('My To-Do App',
                    # below in layout are all the rows
-                   layout=[[label],
+                   layout=[[clock],
+                           [label],
                            [input_box,add_button],
                            [list_box,edit_button, complete_button],
                            [exit_button]],
@@ -23,12 +28,10 @@ window = sg.Window('My To-Do App',
 # each row in the gui layout has to be a list
 
 while True:
-    event, values = window.read()
+    event, values = window.read(timeout=200)
     #python checks what the user clicked using match/case. so every case = something the user clicked in gui
     #Add{'key of i/p box': 'whatever was entered in the i/p box'}
-    print(1,event)
-    print(2,values)
-    print(3,values['todos'])
+    window["clock"].update(value=time.strftime("%b, %d, %Y, %H:%M:%S"))
     match event:
         case "Add":
             todos = functions.get_todos()
@@ -39,30 +42,37 @@ while True:
             # show the updates in real time
 
         case "Edit":
-            todo_to_edit = values['todos'][0]
-            #get the todoitem(values) the user selected from the list('todos')
-            new_todo = values['todo']
-            #get the new text the user entered for this todoo
+            try:
+                todo_to_edit = values['todos'][0]
+                #get the todoitem(values) the user selected from the list('todos')
+                new_todo = values['todo']
+                #get the new text the user entered for this todoo
 
-            todos = functions.get_todos()
-            #load the full list of todos form the file
-            index= todos.index(todo_to_edit)
-            #whats the index(position) of the todoo to be edited
-            todos[index]= new_todo
-            #overwrite the old task with the updated one
+                todos = functions.get_todos()
+                #load the full list of todos form the file
+                index= todos.index(todo_to_edit)
+                #whats the index(position) of the todoo to be edited
+                todos[index]= new_todo
+                #overwrite the old task with the updated one
 
-            functions.write_todos(todos)
-            #make the change permanent
-            window['todos'].update(values=todos)
-            #show the updates in real time
+                functions.write_todos(todos)
+                #make the change permanent
+                window['todos'].update(values=todos)
+                #show the updates in real time
+            except IndexError:
+                sg.popup("please select an item to edit.", font=("Helvetica",20))
 
         case "Complete":
-            todo_to_complete = values['todos'][0]
-            todos = functions.get_todos()
-            todos.remove(todo_to_complete)
-            functions.write_todos(todos)
-            window['todos'].update(values=todos)
-            window['todo'].update(value="")
+            try:
+                todo_to_complete = values['todos'][0]
+                todos = functions.get_todos()
+                todos.remove(todo_to_complete)
+                functions.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value="")
+            except IndexError:
+                sg.popup("please select an item to complate" , font=("Helvetica",20))
+
 
         case "Exit":
             break
