@@ -8,9 +8,16 @@ list_box = sg.Listbox(values=functions.get_todos(), key='todos',
                       enable_events=True, size=[45,10])
                     #enable arg expects true or false, size is how the listbox will look
 edit_button = sg.Button("Edit")
+
+complete_button = sg.Button("Complete")
+
+exit_button = sg.Button("Exit")
 window = sg.Window('My To-Do App',
                    # below in layout are all the rows
-                   layout=[[label], [input_box,add_button],[list_box,edit_button ]],
+                   layout=[[label],
+                           [input_box,add_button],
+                           [list_box,edit_button, complete_button],
+                           [exit_button]],
                    font=('Helvetica',20))
 # a layout expects lists , every square brac goes to next line
 # each row in the gui layout has to be a list
@@ -48,6 +55,17 @@ while True:
             #make the change permanent
             window['todos'].update(values=todos)
             #show the updates in real time
+
+        case "Complete":
+            todo_to_complete = values['todos'][0]
+            todos = functions.get_todos()
+            todos.remove(todo_to_complete)
+            functions.write_todos(todos)
+            window['todos'].update(values=todos)
+            window['todo'].update(value="")
+
+        case "Exit":
+            break
 
         case 'todos':
             window['todo'].update(value=values['todos'][0])
